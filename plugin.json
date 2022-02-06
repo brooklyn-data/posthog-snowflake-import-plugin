@@ -1,0 +1,137 @@
+{
+    "name": "Snowflake Import Plugin (BETA)",
+    "url": "hhttps://github.com/brooklyn-data/posthog-snowflake-import-plugin",
+    "description": "Import PostHog events from Snowflake",
+    "main": "index.ts",
+    "posthogVersion": ">= 1.25.0",
+    "config": [
+        {
+            "markdown": "## ⚠️ Important Notice\nThis plugin is still in Beta! **Use it at your own risk**. Feel free to check out [its code](https://github.com/brooklyn-data/posthog-snowflake-import-plugin/blob/main/index.ts) and [submit feedback](https://github.com/brooklyn-data/posthog-snowflake-import-plugin/issues/new?title=Plugin+Feedback)."
+        },
+        {
+            "key": "account",
+            "hint": "The sub-domain (first part) of the Snowflake URL, ex. `sd1234.us-east-1`",
+            "name": "Snowflake account",
+            "type": "string",
+            "required": true
+        },
+        {
+            "key": "database",
+            "name": "Database Name",
+            "type": "string",
+            "default": "dev",
+            "required": true
+        },
+        {
+            "key": "schema",
+            "hint": "This is the schema the plugin will access in your database. The user only needs access to this schema.",
+            "name": "Schema Name",
+            "type": "string",
+            "default": "posthog"
+        },
+        {
+            "key": "table",
+            "hint": "This is the table the plugin will access in your database. The user only needs access to this table.",
+            "name": "Table Name",
+            "type": "string",
+            "default": "posthog_event"
+        },
+        {
+            "key": "username",
+            "hint": "This user needs read access to the table specified above.",
+            "name": "Username available to the plugin for accessing your database instance",
+            "default": "posthog",
+            "type": "string",
+            "required": true
+        },
+        {
+            "key": "password",
+            "hint": "Make sure it's a strong one!",
+            "name": "Password for the username specified above",
+            "type": "string",
+            "secret": true,
+            "required": true
+        },
+        {
+            "key": "role",
+            "hint": "This is the role that the user will execute the query under",
+            "name": "Snowflake Role",
+            "type": "string",
+            "default": "posthog",
+            "required": true
+        },
+        {
+            "key": "warehouse",
+            "hint": "This is the warehouse that the user will execute the query under",
+            "name": "Snowflake Warehouse",
+            "type": "string",
+            "default": "posthog",
+            "required": true
+        },
+        {
+            "key": "orderBy",
+            "hint": "The column to order by when importing. This is important because it is the reference used for how the plugin iterates through events. The recommendation is to use a timestamp of when the data was inserted into the table",
+            "name": "Order By Column",
+            "type": "string",
+            "default": "inserted_on",
+            "required": true
+        },
+        {
+            "key": "batchSize",
+            "hint": "This is the number of records to fetch per query",
+            "name": "Batch Size",
+            "type": "string",
+            "default": "10",
+            "required": true
+        },
+        {
+            "key": "frequency",
+            "hint": "How often to poll Snowflake in seconds",
+            "name": "Frequency (in seconds)",
+            "type": "string",
+            "default": "60",
+            "required": true
+        },
+        {
+            "key": "transformationName",
+            "name": "Select a transformation to apply to your data:",
+            "type": "choice",
+            "hint": "Visit the [plugin's repository](https://github.com/brooklyn-data/posthog-snowflake-import-plugin) to learn more about the available transformations or [contribute your own](hhttps://github.com/brooklyn-data/posthog-snowflake-import-plugin#contributing-a-transformation).",
+            "choices": [
+                "default",
+                "JSON Map",
+                "Predefined Fields",
+                "passthrough",
+                "Cleaned-Up Properties"],
+            "default": "default"
+        },
+        {
+            "key": "rowToEventMap",
+            "name": "Upload a JSON mapping of your row data to a PostHog event",
+            "type": "attachment",
+            "required_if": [["transformationName", "JSON Map"]],
+            "visible_if": [["transformationName", "JSON Map"]]
+        },
+        {
+            "key": "fieldConfigJson",
+            "name": "Upload a JSON mapping of which columns map to the event, timestamp, and ID fields. Source is optional. The expected column keys are titled `*_column_name`.",
+            "type": "attachment",
+            "required_if": [["transformationName", "Predefined Fields"]],
+            "visible_if": [["transformationName", "Predefined Fields"]]
+        },
+        {
+            "key": "propertyConfigJson",
+            "name": "Upload a JSON mapping of how the properties should be formatted when importing.",
+            "type": "attachment",
+            "required_if": [["transformationName", "Cleaned-Up Properties"]],
+            "visible_if": [["transformationName", "Cleaned-Up Properties"]]
+        },
+        {
+            "key": "importMechanism",
+            "name": "Would you like this plugin to keep importing data as the table grows or only import data added up to the point of installation?",
+            "type": "choice",
+            "choices": ["Import continuously", "Only import historical data"],
+            "default": "Import continuously"
+        }
+    ]
+}

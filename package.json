@@ -1,0 +1,19 @@
+{
+    "name": "posthog-snowflake-import-plugin",
+    "private": true,
+    "version": "0.0.1-beta",
+    "description": "Import PostHog events from Snowflake.",
+    "dependencies": {
+        "generic-pool": "^3.8.2",
+        "snowflake-sdk": "^1.6.0"
+    },
+    "devDependencies": {
+        "@posthog/plugin-contrib": "^0.0.3",
+        "@posthog/plugin-scaffold": "0.12.5",
+        "@types/flat": "^5.0.2",
+        "@types/snowflake-sdk": "^1.5.1"
+    },
+    "scripts": {
+        "compile": "node index.ts"
+    }
+}
